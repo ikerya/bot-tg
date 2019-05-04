@@ -19,7 +19,7 @@ class TelegramBot {
 	} 
 
 	_handleError(err, args = []) {
-		console.log('An error was happened:', err.message, 'args', args);
+		console.error('An error was happened:', err.message, 'args', args);
 	}
 
 	_getMethodUrl(methodName) {

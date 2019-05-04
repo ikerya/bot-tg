@@ -2,14 +2,14 @@
 
 [Examples](#examples)
 
-#Examples
+# Examples
 
 Here is an example to use this package:
 
 ```javascript
-const TelegramBot = require("bot-tg")
+const TelegramBot = require("bot-tg");
 const bot = new TelegramBot({
-	token: '<YOUR_BOT_TOKEN_HERE>',
+	token: '<YOUR_BOT's_TOKEN_HERE>',
 	commands: [{
 		id: 'hello',
 		description: 'click here!',
@@ -23,9 +23,9 @@ const bot = new TelegramBot({
 To get any kind of information from user you should do like that:
 
 ```javascript
-const TelegramBot = require("bot-tg")
+const TelegramBot = require("bot-tg");
 const bot = new TelegramBot({
-    token: '<YOUR_BOT_TOKEN_HERE>',
+    token: '<YOUR_BOT's_TOKEN_HERE>',
     commands: [{
         id: 'set',
         description: 'set something',

@@ -1,12 +1,12 @@
 {
   "name": "bot-tg",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A bot for Telegram Bot's API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "ikerya <ua.kovalker@gmail.com>",
+  "author": "ikerya <i.kerya@mail.ru>",
   "license": "ISC",
   "repository": {
     "type": "git",
