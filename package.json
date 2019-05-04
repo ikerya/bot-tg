@@ -1,0 +1,25 @@
+{
+  "name": "bot-tg",
+  "version": "1.0.6",
+  "description": "A bot for Telegram Bot's API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ikerya <ua.kovalker@gmail.com>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ikerya/bot-tg.git"
+  },
+  "keywords": [
+    "telegram",
+    "telegram bot",
+    "tg bot",
+    "tg"
+  ],
+  "dependencies": {
+    "axios": "^0.18.0",
+    "form-data": "^2.3.3"
+  }
+}
