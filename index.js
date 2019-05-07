@@ -215,6 +215,8 @@ class TelegramBot {
 		for (let i = 0; i < commands.length; i++) {
 			const command = commands[i];
 
+			if (command.hidden) continue;
+
 			content.push(
 				`/${command.id} — ${command.description}`
 			);
