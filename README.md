@@ -2,8 +2,8 @@
 
 ## Table of contents
 
-[Examples](#examples)
-[New](#new)
+* [Examples](#examples)
+* [New](#new)
 
 # Examples
 
