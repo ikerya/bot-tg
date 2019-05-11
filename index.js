@@ -48,18 +48,31 @@ class TelegramBot extends EventEmitter {
 
 			return this.call(...args);
 		};
+		const handleResponse = request => {
+			return new Promise(resolve => {
+				request
+					.then(response => {
+						resolve(response.data);
+					})
+					.catch(handleError);
+			});
+		};
 
 		switch(requestType) {
 			case "GET":
-				return axios.get(
-					this._getMethodUrl(methodName), 
-					{ params }
-				).catch(handleError);			
+				return handleResponse(
+					axios.get(
+						this._getMethodUrl(methodName), 
+						{ params }
+					)
+				);
 			case "POST":
-				return axios.post(
-					this._getMethodUrl(methodName), 
-					params
-				).catch(handleError);
+				return handleResponse(
+					axios.post(
+						this._getMethodUrl(methodName), 
+						params
+					)
+				);
 		}
 	}
 
