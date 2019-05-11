@@ -3,11 +3,14 @@ const { promisify } = require('util');
 const axios = require('axios');
 const FormData = require('form-data');
 const { sleep } = require('./lib/functions');
+const EventEmitter = require('events');
 
 FormData.prototype.submit = promisify(FormData.prototype.submit);
 
-class TelegramBot {
+class TelegramBot extends EventEmitter {
 	constructor(options = {}) {
+		super();
+		
 		this._options = {
 			commands: [],
 			logging: false,
@@ -36,37 +39,27 @@ class TelegramBot {
 
 		const handleError = async err => {
 			const args = [methodName, requestType, params];
-			this._handleError(err, args);
+			
+			if (this._options.logging) {
+				this._handleError(err, args);
+			}
 
 			await sleep(1);
 
-			return this.call(...args, 2);
+			return this.call(...args);
 		};
-		const handleResponse = request => {
-			return new Promise((resolve, reject) => {
-				request
-					.then(response => 
-						resolve(response.data)
-					)
-					.catch(reject);
-			});
-		}
 
 		switch(requestType) {
 			case "GET":
-				return handleResponse( 
-					axios.get(
-						this._getMethodUrl(methodName), 
-						{ params }
-					) 						
-				);
+				return axios.get(
+					this._getMethodUrl(methodName), 
+					{ params }
+				).catch(handleError);			
 			case "POST":
-				return handleResponse(
-					axios.post(
-						this._getMethodUrl(methodName), 
-						params
-					)
-				);
+				return axios.post(
+					this._getMethodUrl(methodName), 
+					params
+				).catch(handleError);
 		}
 	}
 
@@ -136,7 +129,7 @@ class TelegramBot {
 		if (!command.id && TelegramBot.serviceCommands.includes(text)) {
 			return this.sendHelpMessage(userId);
 		} else if(!command.id) {
-			return this.sendMessage(userId, 'Неизвестная команда :(');
+			return this.emit('message', message);
 		}
 
 		if (command.call) {
@@ -222,6 +215,6 @@ class TelegramBot {
 	}
 }
 
-TelegramBot.serviceCommands = [ '/start', '/help' ];
+TelegramBot.serviceCommands = [ '/help' ];
 
 module.exports = TelegramBot;
