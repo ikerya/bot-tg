@@ -64,7 +64,7 @@ const bot = new TelegramBot({
 });
 ```
 
-#Guides
+# Guides
 
 To make some command hidden from list when calling the **help** (or **start**) command use **hidden: true** property:
 
