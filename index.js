@@ -10,6 +10,7 @@ class TelegramBot {
 	constructor(options = {}) {
 		this._options = {
 			commands: [],
+			logging: false,
 			...options
 		};
 		this._lastUpdateId = 0;
@@ -31,7 +32,7 @@ class TelegramBot {
 	}
 
 	call(methodName, requestType, params = {}) {
-		console.log('call', methodName, requestType, params);
+		if (this._options.logging) console.log('call', methodName, requestType, params);
 
 		const handleError = async err => {
 			const args = [methodName, requestType, params];
@@ -85,11 +86,6 @@ class TelegramBot {
 				this._mapUpdates(response.result || []);
 
 				setTimeout(() => this._watchUpdates(), 500);
-			})
-			.catch(err => {
-				console.error(testCode, 'an error happened in watchUpdates', err);
-
-				setTimeout(() => this._watchUpdates(), 1000);
 			});
 	}
 

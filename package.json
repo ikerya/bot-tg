@@ -1,6 +1,6 @@
 {
   "name": "bot-tg",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "A bot for Telegram Bot's API",
   "main": "index.js",
   "scripts": {

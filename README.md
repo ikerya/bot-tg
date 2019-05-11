@@ -3,6 +3,7 @@
 ## Table of contents
 
 * [Examples](#examples)
+* [Guides](#guides)
 * [New](#new)
 
 # Examples
@@ -63,6 +64,42 @@ const bot = new TelegramBot({
 });
 ```
 
+#Guides
+
+To make some command hidden from list when calling the **help** (or **start**) command use **hidden: true** property:
+
+```javascript
+const TelegramBot = require("bot-tg");
+const bot = new TelegramBot({
+    token: '<YOUR_BOT_TOKEN_HERE>',
+    commands: [{
+        id: 'set',
+        description: 'set something',
+        title: 'Send me something:',        
+        done: function(userId, result) {
+            this.sendMessage(userId, `Result is: ${result}`);
+        }
+    }, {
+        id: 'action',
+        description: 'admin action',
+        hidden: true,
+        call: function(userId) {
+            this.sendMessage(userId, 'Hello, admin!');
+        }
+    }]
+});
+```
+
+To enable logging use:
+
+```javascript
+const bot = new TelegramBot({
+    token: '<YOUR_BOT_TOKEN_HERE>',
+    logging: true
+    ...
+});
+```
+
 # New
 
-* Added hidden command's property to hide it from commands list when calling the **help** (or **start**) command.
+* Added **logging** property support to bot's options.
