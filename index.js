@@ -103,11 +103,7 @@ class TelegramBot extends EventEmitter {
 				this._setLastUpdateId(update_id + 1);
 			}
 
-			if (!message) {
-				return;
-			}
-
-			this._emitMessage(message);
+			this._emitMessage(message || update);
 		});
 	}
 
@@ -124,7 +120,8 @@ class TelegramBot extends EventEmitter {
 	}
 
 	_emitMessage(message) {
-		const { text, from } = message;
+		const text = message.text || '';
+		const from = message.from || {};
 		const userId = from.id;
 		const lastCommand = this._getCommandHistory(userId);
 
