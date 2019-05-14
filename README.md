@@ -102,4 +102,23 @@ const bot = new TelegramBot({
 
 # New
 
-* Added **logging** property support to bot's options.
+* When there are no matches with commands list identified at bot's initialization, bot's instance emits a message:
+
+```javascript
+const TelegramBot = require("bot-tg");
+const bot = new TelegramBot({
+    token: '<YOUR_BOT_TOKEN_HERE>',
+    commands: [{
+        id: 'set',
+        description: 'set something',
+        title: 'Send me something:',        
+        done: function(userId, result) {
+            this.sendMessage(userId, `Result is: ${result}`);
+        }
+    }]
+});
+
+bot.on('message', update => {
+    console.log(update);
+});
+```
