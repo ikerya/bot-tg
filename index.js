@@ -5,6 +5,7 @@ const FormData = require('form-data');
 const { sleep } = require('./lib/functions');
 const EventEmitter = require('events');
 
+axios.defaults.timeout = 20000;
 FormData.prototype.submit = promisify(FormData.prototype.submit);
 
 class TelegramBot extends EventEmitter {
@@ -38,13 +39,25 @@ class TelegramBot extends EventEmitter {
 		if (this._options.logging) console.log('call', methodName, requestType, params);
 
 		const handleError = async err => {
+			if (this._options.logging) {
+				console.log('handleError');
+			}
+
 			const args = [methodName, requestType, params];
 			
 			if (this._options.logging) {
 				this._handleError(err, args);
 			}
 
+			if (this._options.logging) {
+				console.log('sleeping');
+			}
+
 			await sleep(1);
+
+			if (this._options.logging) {
+				console.log('slept');
+			}
 
 			return this.call(...args);
 		};
