@@ -5,7 +5,7 @@ const FormData = require('form-data');
 const { sleep } = require('./lib/functions');
 const EventEmitter = require('events');
 
-axios.defaults.timeout = 20000;
+axios.defaults.timeout = 5000;
 FormData.prototype.submit = promisify(FormData.prototype.submit);
 
 class TelegramBot extends EventEmitter {
@@ -15,12 +15,14 @@ class TelegramBot extends EventEmitter {
 		this._options = {
 			commands: [],
 			logging: false,
+			interval: 1000,
 			...options
 		};
 		this._lastUpdateId = 0;
 
 		this._usersHistory = {};
 		this._watchUpdates();
+		this._watchMemory();
 	} 
 
 	_handleError(err, args = []) {
@@ -38,13 +40,13 @@ class TelegramBot extends EventEmitter {
 	call(methodName, requestType, params = {}) {
 		if (this._options.logging) console.log('call', methodName, requestType, params);
 
-		const handleError = async err => {
+		const handleError = promise => async err => {
 			if (this._options.logging) {
 				console.log('handleError');
 			}
 
 			const args = [methodName, requestType, params];
-			
+				
 			if (this._options.logging) {
 				this._handleError(err, args);
 			}
@@ -59,15 +61,19 @@ class TelegramBot extends EventEmitter {
 				console.log('slept');
 			}
 
-			return this.call(...args);
+			return this.call(...args).then(promise);
 		};
 		const handleResponse = request => {
 			return new Promise(resolve => {
 				request
 					.then(response => {
-						resolve(response.data);
+						if (response.data) {
+							return resolve(response.data);
+						}
+
+						throw new Error('Could not recognize data:', response.data);
 					})
-					.catch(handleError);
+					.catch(handleError(resolve));
 			});
 		};
 
@@ -97,6 +103,17 @@ class TelegramBot extends EventEmitter {
 		return this.call(methodName, 'POST', params);
 	} 
 
+	_getMemory() {
+		return (process.memoryUsage().heapUsed / (1024 ** 2)).toFixed(3);
+	}
+
+	_watchMemory() {
+		if (!this._options.logging) return;
+
+		console.log('Memory usage', this._getMemory());
+		setTimeout(() => this._watchMemory(), 10000);
+	}
+
 	_watchUpdates() {
 		const response = this.get('getUpdates', {
 			offset: this._lastUpdateId
@@ -104,7 +121,7 @@ class TelegramBot extends EventEmitter {
 			.then(response => {
 				this._mapUpdates(response.result || []);
 
-				setTimeout(() => this._watchUpdates(), 500);
+				setTimeout(() => this._watchUpdates(), this._options.interval);
 			});
 	}
 
